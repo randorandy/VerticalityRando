@@ -87,8 +87,8 @@ def generate(options: GameOptions) -> Game:
         
         
         randomizeAttempts += 1
-        if randomizeAttempts > 10:
-            print("Giving up after 10 attempts. Help?")
+        if randomizeAttempts > 100:
+            print("Giving up after 100 attempts. Please try again or contact ironrusty.")
             break
         print("Starting randomization attempt:", randomizeAttempts)
         game.item_placement_spoiler = ""
