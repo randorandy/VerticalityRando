@@ -309,6 +309,14 @@ location_logic: LocationLogicType = {
         (
             (GravitySuit in loadout) or
             (Grapple in loadout)
+        ) and
+        (
+            (Glider in loadout) or
+            (SpaceJump in loadout) or
+            (
+                (GravitySuit in loadout) and
+                (SpeedBooster in loadout)
+            )
         )
     ),
     "Missile 76": lambda loadout: (
@@ -469,11 +477,7 @@ location_logic: LocationLogicType = {
         (upperBrinstar in loadout)
     ),
     "Missile 27": lambda loadout: (
-        (upperBrinstar in loadout) and
-        (
-            (SpaceJump in loadout) or
-            (Grapple in loadout) #maybe
-        )
+        (upperBrinstar in loadout)
     ),
     "Missile 22": lambda loadout: (
         (upperBrinstar in loadout) and
@@ -647,7 +651,7 @@ location_logic: LocationLogicType = {
     ),
     "Charge Missile 255": lambda loadout: (
         (upperBrinstar in loadout) and
-        (Glider in loadout) #more?
+        (Glider in loadout)
     ),
     "Missile 37": lambda loadout: (
         (brinstar in loadout)
