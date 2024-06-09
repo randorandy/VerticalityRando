@@ -31,8 +31,8 @@ from logic_shortcut import LogicShortcut
 
 (
     Missile, Super, PowerBomb, Morph, Bombs, HiJump,
-    Varia, GravitySuit, Wave, SpeedBooster, Spazer, Ice, Grapple,
-    Plasma, Screw, SpaceJump, Energy, Reserve,
+    Varia, GravitySuit, Wave, SpeedBooster, Spazer, Ice, 
+    Plasma, Screw, Grapple, SpaceJump, Energy, Reserve,
     Glider, ChargeMissile, ReserveMissile, Overcharge, ChargeSuper
 ) = items_unpackable
 
@@ -210,29 +210,52 @@ brinstar = LogicShortcut(lambda loadout: (
     (greenDoor in loadout) and
     (
         (Glider in loadout) or
-        (SpaceJump in loadout)
+        (SpaceJump in loadout) or
+        (SpeedBooster in loadout) #GGG from WS into Brin
     )
 ))
 upperBrinstar = LogicShortcut(lambda loadout: (
     (brinstar in loadout) and
-    (Wave in loadout) and
     (
-        (Grapple in loadout) or
-        (Glider in loadout) or
-        (canFly in loadout) 
+        (
+            (Wave in loadout) and
+            (
+                (Grapple in loadout) or
+                (Glider in loadout) or
+                (canFly in loadout) 
+            )
+        ) or
+        (SpeedBooster in loadout) #GGG from WS into Brin
     )
+
 ))
 wreckedShip = LogicShortcut(lambda loadout: (
     (upperBrinstar in loadout) and
     (SpeedBooster in loadout)
 ))
+wreckedShipGGG = LogicShortcut(lambda loadout: (
+    (canBreakBlocks in loadout) and
+    (greenDoor in loadout)
+))
 upperShip = LogicShortcut(lambda loadout: (
-    (wreckedShip in loadout) and
+    (wreckedShipGGG in loadout) and
     (canUsePB in loadout)
 ))
 crateria = LogicShortcut(lambda loadout: (
     (upperShip in loadout) and
     (SpaceJump in loadout)
+))
+crateriaGGG = LogicShortcut(lambda loadout: (
+    (canBreakBlocks in loadout) and
+    (Super in loadout)
+))
+upperCrateria = LogicShortcut(lambda loadout: (
+    (crateria in loadout) or
+    (crateriaGGG in loadout) and
+    (
+        (SpaceJump in loadout) or
+        (SpeedBooster in loadout)
+    )
 ))
 
 allItems = LogicShortcut(lambda loadout: (
@@ -477,7 +500,12 @@ location_logic: LocationLogicType = {
         (upperBrinstar in loadout)
     ),
     "Missile 27": lambda loadout: (
-        (upperBrinstar in loadout)
+        (upperBrinstar in loadout) and
+        (
+            (Glider in loadout) or
+            (SpaceJump in loadout) or
+            (Grapple in loadout) #?
+        )
     ),
     "Missile 22": lambda loadout: (
         (upperBrinstar in loadout) and
@@ -493,7 +521,12 @@ location_logic: LocationLogicType = {
         (SpeedBooster in loadout)
     ),
     "Missile 34": lambda loadout: (
-        (brinstar in loadout)
+        (brinstar in loadout) and
+        (
+            (Glider in loadout) or
+            (SpaceJump in loadout) or
+            (SpeedBooster in loadout)
+        )
     ),
     "Power Bomb 32": lambda loadout: (
         (brinstar in loadout) and
@@ -511,33 +544,49 @@ location_logic: LocationLogicType = {
         (upperBrinstar in loadout)
     ),
     "Missile 61": lambda loadout: (
-        (wreckedShip in loadout) and
+        (wreckedShipGGG in loadout) and
         (SpeedBooster in loadout)
     ),
     "Missile 62": lambda loadout: (
-        (wreckedShip in loadout) and
+        (wreckedShipGGG in loadout) and
         (SpeedBooster in loadout)
     ),
     "Energy Tank 63": lambda loadout: (
-        (wreckedShip in loadout)
+        (wreckedShip in loadout) or
+        (
+            (wreckedShipGGG in loadout) and
+            (
+                (SpeedBooster in loadout) or
+                (Ice in loadout)
+            )
+        )
     ),
     "Ice Beam 64": lambda loadout: (
-        (wreckedShip in loadout) and
+        (
+            (wreckedShip in loadout) or
+            (
+                (wreckedShipGGG in loadout) and
+                (
+                    (SpeedBooster in loadout) or
+                    (Ice in loadout)
+                )
+            )
+        ) and
         (
             (Glider in loadout) or
             (SpaceJump in loadout)
         )
     ),
     "Missile 58": lambda loadout: (
-        (wreckedShip in loadout) and
+        (wreckedShipGGG in loadout) and
         (SpeedBooster in loadout)
     ),
     "Reserve Tank 59": lambda loadout: (
-        (wreckedShip in loadout) and
+        (wreckedShipGGG in loadout) and
         (SpeedBooster in loadout)
     ),
     "Super Missile 65": lambda loadout: (
-        (upperBrinstar in loadout) #though it's in ws
+        (wreckedShipGGG in loadout)
     ),
     "Energy Tank 70": lambda loadout: (
         (upperShip in loadout)
@@ -554,55 +603,107 @@ location_logic: LocationLogicType = {
         (canFly in loadout)
     ),
     "Missile 3": lambda loadout: (
-        (crateria in loadout)
+        (crateria in loadout) or
+        (
+            (crateriaGGG in loadout) and
+            (canUsePB in loadout) and
+            (SpaceJump in loadout)
+        )
     ),
     "Plasma Beam 4": lambda loadout: (
-        (crateria in loadout)
+        (crateria in loadout) or
+        (
+            (crateriaGGG in loadout) and
+            (canUsePB in loadout) and
+            (SpeedBooster in loadout)
+        )
     ),
     "Power Bomb 5": lambda loadout: (
-        (crateria in loadout) and
+        (
+            (crateria in loadout) or
+            (
+                (crateriaGGG in loadout) and
+                (canUsePB in loadout)
+            )
+        ) and
         (SpeedBooster in loadout)
     ),
     "Missile 6": lambda loadout: (
-        (crateria in loadout)
+        (
+            (crateria in loadout) or
+            (crateriaGGG in loadout) 
+        ) and
+        (canSpeedOrFly in loadout)
     ),
     "Power Bomb 12": lambda loadout: (
-        (crateria in loadout) and
+        (upperCrateria in loadout) and
         (SpeedBooster in loadout)
     ),
     "Screw Attack 10": lambda loadout: (
-        (crateria in loadout) and
+        (upperCrateria in loadout) and
         (Plasma in loadout) and
         (energy600 in loadout) 
     ),
     "Super Missile 14": lambda loadout: (
-        (crateria in loadout) and
+        (upperCrateria in loadout) and
         (Plasma in loadout) and
         (energy600 in loadout) and
         (Screw in loadout) #could be better due to gray door
     ),
     "Missile 8": lambda loadout: (
-        (crateria in loadout)
+        (
+            (crateria in loadout) or
+            (crateriaGGG in loadout) 
+        ) and
+        (SpeedBooster in loadout)
     ),
     "Energy Tank 0": lambda loadout: (
-        (crateria in loadout)
+        (crateria in loadout) or
+        (
+            (crateriaGGG in loadout) and
+            (canUsePB in loadout) and
+            (canSpeedOrFly in loadout)
+        )
     ),
     "Super Missile 2": lambda loadout: (
-        (crateria in loadout) and
+        (
+            (crateria in loadout) or
+            (
+                (crateriaGGG in loadout) and
+                (canUsePB in loadout) and
+                (canSpeedOrFly in loadout)
+            )
+        ) and
         (Screw in loadout)
     ),
     "Reserve Tank 1": lambda loadout: (
-        (crateria in loadout) and
+        (
+            (crateria in loadout) or
+            (
+                (crateriaGGG in loadout) and
+                (canUsePB in loadout) and
+                (SpaceJump in loadout)
+            )
+        ) and
         (Screw in loadout)
     ),
     "Reserve Missile 7": lambda loadout: (
-        (crateria in loadout)
+        (crateria in loadout) or
+        (
+            (crateriaGGG in loadout) and
+            (SpeedBooster in loadout)
+        )
     ),
     "Missile 15": lambda loadout: (
-        (crateria in loadout)
+        (crateria in loadout) or
+        (
+            (crateriaGGG in loadout) and
+            (SpeedBooster in loadout)
+        )
     ),
     "Missile 11": lambda loadout: (
-        (crateria in loadout)
+        (upperCrateria in loadout) and
+        (canUseBombs in loadout)
     ),
     "Energy Tank 73": lambda loadout: (
         (upperShip in loadout) and
@@ -616,14 +717,22 @@ location_logic: LocationLogicType = {
         (upperShip in loadout)
     ),
     "Missile 66": lambda loadout: (
-        (wreckedShip in loadout)
+        (wreckedShipGGG in loadout) and
+        (
+            (GravitySuit in loadout) or
+            (HiJump in loadout) #I think, underwater
+        )
     ),
     "Reserve Missile 67": lambda loadout: (
-        (wreckedShip in loadout) and
-        (SpaceJump in loadout)
+        (wreckedShipGGG in loadout) and
+        (SpaceJump in loadout) and
+        (
+            (GravitySuit in loadout) or
+            (HiJump in loadout) #I think, underwater
+        )
     ),
     "Gravity Suit 69": lambda loadout: (
-        (wreckedShip in loadout) and
+        (wreckedShipGGG in loadout) and
         (GravitySuit in loadout)
     ),
     "Super Missile 40": lambda loadout: (
@@ -640,7 +749,7 @@ location_logic: LocationLogicType = {
     ),
     "Reserve Tank 33": lambda loadout: (
         (upperBrinstar in loadout) and
-        (Grapple in loadout) and #maybe?
+        (Grapple in loadout) and 
         (SpeedBooster in loadout)
     ),
     "Missile 29": lambda loadout: (
@@ -668,13 +777,32 @@ location_logic: LocationLogicType = {
         (Varia in loadout)
     ),
     "Missile 68": lambda loadout: (
-        (wreckedShip in loadout)
+        (
+            (wreckedShip in loadout) or
+            (
+                (wreckedShipGGG in loadout) and
+                (
+                    (SpeedBooster in loadout) or
+                    (Ice in loadout)
+                )
+            )
+        ) and
+        (
+            (GravitySuit in loadout) or
+            (HiJump in loadout) #water section needs?
+        )
     ),
     "Super Missile 56": lambda loadout: (
         (canUseBombs in loadout) and
         (greenDoor in loadout) and
         (Varia in loadout) and
-        (SpaceJump in loadout) #maybe other ways?
+        (
+            (SpaceJump in loadout) or
+            (
+                (HiJump in loadout) and
+                (SpeedBooster in loadout) #maybe more
+            )
+        )
     ),
     "Missile 89": lambda loadout: (
         (canBreakBlocks in loadout) and
@@ -704,7 +832,8 @@ location_logic: LocationLogicType = {
         (greenDoor in loadout)
     ),
     "Missile 13": lambda loadout: (
-        (upperBrinstar in loadout)
+        (upperCrateria in loadout) and
+        (Screw in loadout)
     ),
     "Overcharge 53": lambda loadout: (
         (canUseBombs in loadout) and
@@ -712,7 +841,7 @@ location_logic: LocationLogicType = {
         (Varia in loadout)
     ),
     "Energy Tank 9": lambda loadout: (
-        (crateria in loadout) and
+        (upperCrateria in loadout) and
         (Screw in loadout)
     ),
 
